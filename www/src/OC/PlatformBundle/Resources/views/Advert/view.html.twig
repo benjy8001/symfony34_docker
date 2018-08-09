@@ -6,6 +6,13 @@
 
 {% block ocplatform_body %}
 
+  <div>
+    {# On affiche tous les messages flash dont le nom est « info » #}
+    {% for message in app.session.flashbag.get('info') %}
+      <p>Message flash : {{ message }}</p>
+    {% endfor %}
+  </div>
+
   <h2>{{ advert.title }}</h2>
   <i>Par {{ advert.author }}, le {{ advert.date|date('d/m/Y') }}</i>
 

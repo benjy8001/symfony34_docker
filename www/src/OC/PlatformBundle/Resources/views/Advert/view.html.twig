@@ -8,7 +8,7 @@
 
   <div>
     {# On affiche tous les messages flash dont le nom est « info » #}
-    {% for message in app.session.flashbag.get('info') %}
+    {% for message in app.flashes('info') %}
       <p>Message flash : {{ message }}</p>
     {% endfor %}
   </div>

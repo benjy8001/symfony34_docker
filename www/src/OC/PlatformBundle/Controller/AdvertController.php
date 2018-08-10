@@ -79,7 +79,7 @@ class AdvertController extends Controller
 				throw new \Exception('Votre message a été détecté comme spam !');
 			}			
 			// Ici, on s'occupera de la création et de la gestion du formulaire
-			$request->getSession()->getFlashBag()->add('notice', 'Annonce bien enregistrée.');
+			$request->addFlash('notice', 'Annonce bien enregistrée.');
 			// Puis on redirige vers la page de visualisation de cettte annonce
 			return $this->redirectToRoute('oc_platform_view', array('id' => 5));
 		}

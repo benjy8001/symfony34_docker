@@ -11,11 +11,31 @@ if [ -z "$(ls -A /mnt/apps/symfony/www)" ]; then
     symfony new www 3.4
 fi
 
-cd /mnt/apps/symfony
+cd /mnt/apps/symfony/www
 
-chmod 777 www/var/ -R
+chmod 777 var/ -R
 
 # composer install
 # npm install
+
+while ! curl http://database:5432/ 2>&1 | grep '52'
+do
+	>&2 echo "Postgres is unavailable - sleeping"
+	slepp 1
+done
+
+>&2 echo "Postgres is up - Run migrations"
+
+#Create database
+# php bin/console doctrine:database:create
+
+#Show queries diff
+# php bin/console doctrine:schema:update --dump-sql
+
+#Execute queries diff
+php bin/console doctrine:schema:update --force
+
+#Show queries diff
+# php bin/console doctrine:generate:entities OCPlatformBundle:Advert
 
 exec "$@"

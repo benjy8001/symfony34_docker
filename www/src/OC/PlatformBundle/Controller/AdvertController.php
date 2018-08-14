@@ -51,14 +51,11 @@ class AdvertController extends Controller
 	// On donne à cette méthode l'argument $id, pour correspondre au paramètre {id} de la route
 	public function viewAction($id)
 	{
-	    // On récupère le repository
-	    $repository = $this->getDoctrine()
-	      ->getManager()
-	      ->getRepository('OCPlatformBundle:Advert')
-	    ;
+	    // On récupère l'EntityManager
+	    $em = $this->getDoctrine()->getManager();
 
 	    // On récupère l'entité correspondante à l'id $id
-	    $advert = $repository->find($id);
+	    $advert = $em->getRepository('OCPlatformBundle:Advert')->find($id);
 
 	    // $advert est donc une instance de OC\PlatformBundle\Entity\Advert
 	    // ou null si l'id $id  n'existe pas, d'où ce if :

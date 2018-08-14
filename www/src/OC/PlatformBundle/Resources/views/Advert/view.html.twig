@@ -36,6 +36,19 @@
     </div>
   </div>
 
+  {% if not advert.categories.empty %}
+    <div class="row">
+      <div class="col-md-12">
+        <p>
+          Cette annonce est parue dans les catégories suivantes :
+          {% for category in advert.categories %}
+            <span class="label label-info">{{ category.name }}</span>
+          {% endfor %}
+        </p>
+      </div>
+    </div>
+  {% endif %}
+
 
   <div class="row">
     <div class="col-md-12">

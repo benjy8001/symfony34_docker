@@ -9,6 +9,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 use OC\PlatformBundle\Entity\Advert;
 use OC\PlatformBundle\Entity\Image;
+use OC\PlatformBundle\Entity\Application;
 
 class AdvertController extends Controller
 {
@@ -63,9 +64,16 @@ class AdvertController extends Controller
 	      throw new NotFoundHttpException("L'annonce d'id ".$id." n'existe pas.");
 	    }
 
+		// On récupère la liste des candidatures de cette annonce
+		$listApplications = $em
+			->getRepository('OCPlatformBundle:Application')
+			->findBy(array('advert' => $advert))
+		;
+
 	    // Le render ne change pas, on passait avant un tableau, maintenant un objet
 	    return $this->render('OCPlatformBundle:Advert:view.html.twig', array(
-	      'advert' => $advert
+	      'advert' => $advert,
+	      'listApplications' => $listApplications
 	    ));
 	}
 
@@ -91,11 +99,27 @@ class AdvertController extends Controller
 	    // On lie l'image à l'annonce
 	    $advert->setImage($image);
 
+		// Création d'une première candidature
+		$application1 = new Application();
+		$application1->setAuthor('Marine');
+		$application1->setContent("J'ai toutes les qualités requises.");
+
+		// Création d'une deuxième candidature par exemple
+		$application2 = new Application();
+		$application2->setAuthor('Pierre');
+		$application2->setContent("Je suis très motivé.");
+
+		// On lie les candidatures à l'annonce
+		$application1->setAdvert($advert);
+		$application2->setAdvert($advert);
+
 	    // On récupère l'EntityManager
 	    $em = $this->getDoctrine()->getManager();
 
 	    // Étape 1 : On « persiste » l'entité + l'image (cf attribut cascade)
 	    $em->persist($advert);
+	    $em->persist($application1);
+	    $em->persist($application2);
 
 	    // Étape 2 : On déclenche l'enregistrement
 	    $em->flush();

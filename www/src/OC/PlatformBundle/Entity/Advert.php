@@ -23,14 +23,14 @@ class Advert
     private $id;
 
     /**
-    * @ORM\OneToOne(targetEntity="OC\PlatformBundle\Entity\Image", cascade={"persist"})
-    */
+     * @ORM\OneToOne(targetEntity="OC\PlatformBundle\Entity\Image", cascade={"persist"})
+     */
     private $image;
 
     /**
-    * @ORM\ManyToMany(targetEntity="OC\PlatformBundle\Entity\Category", cascade={"persist"})
-    * @ORM\JoinTable(name="oc_advert_category")
-    */
+     * @ORM\ManyToMany(targetEntity="OC\PlatformBundle\Entity\Category", cascade={"persist"})
+     * @ORM\JoinTable(name="oc_advert_category")
+     */
     private $categories;
 
     /**

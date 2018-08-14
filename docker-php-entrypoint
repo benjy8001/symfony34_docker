@@ -38,4 +38,7 @@ php bin/console doctrine:schema:update --force
 #Generate getter/setter entity
 # php bin/console doctrine:generate:entities OCPlatformBundle:Advert
 
+#Seed database
+php bin/console doctrine:fixtures:load --no-interaction
+
 exec "$@"

@@ -24,7 +24,7 @@ class Advert
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="date", type="datetime")
+     * @ORM\Column(name="date", type="datetime", nullable=false)
      */
     private $date;
 
@@ -54,6 +54,12 @@ class Advert
      */
     private $published;
 
+
+    public function __construct()
+    {
+        $this->date = new \DateTime();
+        $this->published = false;
+    }
 
     /**
      * Get id.

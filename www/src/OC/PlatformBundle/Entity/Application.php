@@ -84,7 +84,7 @@ class Application
      */
     public function getId()
     {
-        return $this->id;
+      return $this->id;
     }
 
     /**
@@ -96,9 +96,9 @@ class Application
      */
     public function setAuthor($author)
     {
-        $this->author = $author;
+      $this->author = $author;
 
-        return $this;
+      return $this;
     }
 
     /**
@@ -120,9 +120,9 @@ class Application
      */
     public function setContent($content)
     {
-        $this->content = $content;
+      $this->content = $content;
 
-        return $this;
+      return $this;
     }
 
     /**
@@ -132,7 +132,7 @@ class Application
      */
     public function getContent()
     {
-        return $this->content;
+      return $this->content;
     }
 
     /**
@@ -144,9 +144,9 @@ class Application
      */
     public function setDate($date)
     {
-        $this->date = $date;
+      $this->date = $date;
 
-        return $this;
+      return $this;
     }
 
     /**
@@ -156,7 +156,7 @@ class Application
      */
     public function getDate()
     {
-        return $this->date;
+      return $this->date;
     }
 
     /**
@@ -168,9 +168,9 @@ class Application
      */
     public function setAdvert(\OC\PlatformBundle\Entity\Advert $advert)
     {
-        $this->advert = $advert;
+      $this->advert = $advert;
 
-        return $this;
+      return $this;
     }
 
     /**

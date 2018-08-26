@@ -17,3 +17,10 @@ services:
             - "@oc_platform.email.application_mailer"
         tags:
             - { name: doctrine.event_listener, event: postPersist }
+
+    gedmo.listener.sluggable:
+        class: Gedmo\Sluggable\SluggableListener
+        tags:
+            - { name: doctrine.event_subscriber, connection: pgsql }
+        calls:
+            - [ setAnnotationReader, [ "@annotation_reader" ] ]

@@ -415,7 +415,7 @@ class Advert
      *
      * @return Advert
      */
-    public function setUpdatedAt($updatedAt = null)
+    public function setUpdatedAt(\Datetime $updatedAt = null)
     {
         $this->updatedAt = $updatedAt;
 

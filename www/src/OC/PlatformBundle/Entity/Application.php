@@ -142,7 +142,7 @@ class Application
      *
      * @return Application
      */
-    public function setDate($date)
+    public function setDate(\DateTime $date)
     {
       $this->date = $date;
 

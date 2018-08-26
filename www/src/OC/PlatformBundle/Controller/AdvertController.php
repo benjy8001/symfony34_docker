@@ -97,6 +97,7 @@ class AdvertController extends Controller
 	    $advert = new Advert();
 	    $advert->setTitle('Recherche développeur Symfony.');
 	    $advert->setAuthor('Alexandre');
+		$advert->setEmail('tutu@test.fr');
 	    $advert->setContent("Nous recherchons un développeur Symfony débutant sur Lyon. Blabla…");
 
 	    // Création de l'entité Image
@@ -110,11 +111,13 @@ class AdvertController extends Controller
 		// Création d'une première candidature
 		$application1 = new Application();
 		$application1->setAuthor('Marine');
+		$application1->setEmail('tutu@test.fr');
 		$application1->setContent("J'ai toutes les qualités requises.");
 
 		// Création d'une deuxième candidature par exemple
 		$application2 = new Application();
 		$application2->setAuthor('Pierre');
+		$application2->setEmail('toto@test.fr');
 		$application2->setContent("Je suis très motivé.");
 
 		// On lie les candidatures à l'annonce

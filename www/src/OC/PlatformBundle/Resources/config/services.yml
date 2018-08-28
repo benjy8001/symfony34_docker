@@ -1,26 +1,31 @@
 services:
-    oc_platform.antispam:
-        class: OC\PlatformBundle\Antispam\OCAntispam
-        arguments:
-            - "@mailer"
-            - "%locale%"
-            - 50
+  oc_platform.antispam:
+    class: OC\PlatformBundle\Antispam\OCAntispam
+    arguments:
+      - "@mailer"
+      - "%locale%"
+      - 50
 
-    oc_platform.email.application_mailer:
-        class: OC\PlatformBundle\Email\ApplicationMailer
-        arguments:
-            - "@mailer"
+  oc_platform.email.application_mailer:
+    class: OC\PlatformBundle\Email\ApplicationMailer
+    arguments:
+      - "@mailer"
 
-    oc_platform.doctrine_listener.application_creation:
-        class: OC\PlatformBundle\DoctrineListener\ApplicationCreationListener
-        arguments:
-            - "@oc_platform.email.application_mailer"
-        tags:
-            - { name: doctrine.event_listener, event: postPersist }
+  oc_platform.doctrine_listener.application_creation:
+    class: OC\PlatformBundle\DoctrineListener\ApplicationCreationListener
+    arguments:
+      - "@oc_platform.email.application_mailer"
+    tags:
+      - { name: doctrine.event_listener, event: postPersist }
 
-    gedmo.listener.sluggable:
-        class: Gedmo\Sluggable\SluggableListener
-        tags:
-            - { name: doctrine.event_subscriber, connection: pgsql }
-        calls:
-            - [ setAnnotationReader, [ "@annotation_reader" ] ]
+  gedmo.listener.sluggable:
+    class: Gedmo\Sluggable\SluggableListener
+    tags:
+      - { name: doctrine.event_subscriber, connection: pgsql }
+    calls:
+      - [ setAnnotationReader, [ "@annotation_reader" ] ]
+
+  oc_platform.purger.advert:
+    class: OC\PlatformBundle\Purger\AdvertPurger
+    arguments:
+      - "@doctrine.orm.entity_manager"

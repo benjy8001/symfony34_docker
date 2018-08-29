@@ -18,6 +18,7 @@ use OC\PlatformBundle\Entity\Application;
 use OC\PlatformBundle\Entity\AdvertSkill;
 
 use OC\PlatformBundle\Form\AdvertType;
+use OC\PlatformBundle\Form\AdvertEditType;
 
 class AdvertController extends Controller
 {
@@ -105,6 +106,9 @@ class AdvertController extends Controller
 			$form->handleRequest($request);
 
 			if ($form->isValid()) {
+
+				$advert->getImage()->upload();
+
 				$em = $this->getDoctrine()->getManager();
 				$em->persist($advert);
 				$em->flush();
@@ -133,13 +137,26 @@ class AdvertController extends Controller
       throw new NotFoundHttpException("L'annonce d'id ".$id." n'existe pas.");
     }
 
+    $form = $this->createForm(AdvertEditType::class, $advert);
+
 		if ($request->isMethod('POST')) {
-			$this->addFlash('notice', 'Annonce bien modifiée.');
-			return $this->redirectToRoute('oc_platform_view', array('id' => $advert->getId()));
+			$form->handleRequest($request);
+
+			if ($form->isValid()) {
+				$em = $this->getDoctrine()->getManager();
+				$em->persist($advert);
+				$em->flush();
+
+				$this->addFlash('notice', 'Annonce bien modifiée.');
+
+				// On redirige vers la page de visualisation de l'annonce nouvellement créée
+				return $this->redirectToRoute('oc_platform_view', array('id' => $advert->getId()));
+			}
 		}
 
 		return $this->render('OCPlatformBundle:Advert:edit.html.twig', array(
-			'advert' => $advert
+      'advert' => $advert,
+      'form' => $form->createView(),
 		));
 	}
 

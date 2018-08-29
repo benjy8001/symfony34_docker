@@ -7,10 +7,6 @@
 {% block body %}
   <h2>Page d'accueil de notre site</h2>
 
-  {% for message in app.flashes('notice') %}
-    <div class="alert alert-warning" role="alert">Message flash : {{ message }}</div>
-  {% endfor %}
-
   <h3>Derniéres annonces</h3>
 
   {{ render(controller("OCPlatformBundle:Advert:menu", {'limit': 3})) }}

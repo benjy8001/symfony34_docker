@@ -199,7 +199,7 @@ class AdvertController extends Controller
     }
 
 		if ($request->isMethod('POST')) {
-			$request->getSession()->getFlashBag()->add('notice', 'Annonce bien modifiée.');
+			$request->addFlash('notice', 'Annonce bien modifiée.');
 			return $this->redirectToRoute('oc_platform_view', array('id' => $advert->getId()));
 		}
 
@@ -251,7 +251,7 @@ class AdvertController extends Controller
     $purger = $this->get('oc_platform.purger.advert');
     $purger->purge($days);
 
-    $request->getSession()->getFlashBag()->add('info', 'Les annonces plus vieilles que '.$days.' jours ont été purgées.');
+    $request->addFlash('notice', 'Les annonces plus vieilles que '.$days.' jours ont été purgées.');
 
     return $this->redirectToRoute('oc_platform_home');
   } 	

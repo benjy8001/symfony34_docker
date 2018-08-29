@@ -99,7 +99,7 @@ class AdvertController extends Controller
     $advert = new Advert();
 
     // On crée le FormBuilder grâce au service form factory
-    $form   = $this->get('form.factory')->create(AdvertType::class, $advert);
+    $form   = $this->createForm(AdvertType::class, $advert);
 
     if ($request->isMethod('POST')) {
 			$form->handleRequest($request);

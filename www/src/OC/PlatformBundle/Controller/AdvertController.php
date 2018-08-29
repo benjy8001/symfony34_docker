@@ -17,6 +17,8 @@ use OC\PlatformBundle\Entity\Image;
 use OC\PlatformBundle\Entity\Application;
 use OC\PlatformBundle\Entity\AdvertSkill;
 
+use OC\PlatformBundle\Form\AdvertType;
+
 class AdvertController extends Controller
 {
 	const NB_PER_PAGE = 3;
@@ -97,15 +99,7 @@ class AdvertController extends Controller
     $advert = new Advert();
 
     // On crée le FormBuilder grâce au service form factory
-    $form = $this->get('form.factory')->createBuilder(FormType::class, $advert)
-			->add('date',      DateType::class)
-      ->add('title',     TextType::class)
-      ->add('content',   TextareaType::class)
-      ->add('author',    TextType::class)
-      ->add('published', CheckboxType::class, array('required' => false))
-      ->add('save',      SubmitType::class)
-      ->getForm()
-    ;
+    $form   = $this->get('form.factory')->create(AdvertType::class, $advert);
 
     if ($request->isMethod('POST')) {
 			$form->handleRequest($request);

@@ -18,7 +18,7 @@
     <div class="col-md-3">
       {# On vérifie qu'une image soit bien associée à l'annonce #}
       {% if advert.image is not null %}
-        <img src="{{ advert.image.url }}" class="img-responsive" alt="{{ advert.image.alt }}">
+        <img src="{{ asset(advert.image.webPath) }}" class="img-responsive" alt="{{ advert.image.alt }}">
       {% endif %}
     </div>
     <div class="col-md-9">

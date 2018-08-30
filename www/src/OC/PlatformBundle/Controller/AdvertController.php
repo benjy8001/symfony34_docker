@@ -102,22 +102,15 @@ class AdvertController extends Controller
     // On crée le FormBuilder grâce au service form factory
     $form   = $this->createForm(AdvertType::class, $advert);
 
-    if ($request->isMethod('POST')) {
-			$form->handleRequest($request);
+    if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
+			$em = $this->getDoctrine()->getManager();
+			$em->persist($advert);
+			$em->flush();
 
-			if ($form->isValid()) {
+			$this->addFlash('notice', 'Annonce bien enregistrée.');
 
-				$advert->getImage()->upload();
-
-				$em = $this->getDoctrine()->getManager();
-				$em->persist($advert);
-				$em->flush();
-
-				$this->addFlash('notice', 'Annonce bien enregistrée.');
-
-				// On redirige vers la page de visualisation de l'annonce nouvellement créée
-				return $this->redirectToRoute('oc_platform_view', array('id' => $advert->getId()));
-			}
+			// On redirige vers la page de visualisation de l'annonce nouvellement créée
+			return $this->redirectToRoute('oc_platform_view', array('id' => $advert->getId()));
     }
 
     return $this->render('OCPlatformBundle:Advert:add.html.twig', array(
@@ -127,11 +120,9 @@ class AdvertController extends Controller
 
 	public function editAction($id, Request $request)
 	{
+		$em = $this->getDoctrine()->getManager();
     // On récupère l'entité correspondante à l'id $id
-    $advert = $this->getDoctrine()
-    	->getManager()
-    	->getRepository('OCPlatformBundle:Advert')
-    	->find($id);
+    $advert = $em->getRepository('OCPlatformBundle:Advert')->find($id);
 
     if (null === $advert) {
       throw new NotFoundHttpException("L'annonce d'id ".$id." n'existe pas.");
@@ -139,19 +130,13 @@ class AdvertController extends Controller
 
     $form = $this->createForm(AdvertEditType::class, $advert);
 
-		if ($request->isMethod('POST')) {
-			$form->handleRequest($request);
+		if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
+			$em->flush();
 
-			if ($form->isValid()) {
-				$em = $this->getDoctrine()->getManager();
-				$em->persist($advert);
-				$em->flush();
+			$this->addFlash('notice', 'Annonce bien modifiée.');
 
-				$this->addFlash('notice', 'Annonce bien modifiée.');
-
-				// On redirige vers la page de visualisation de l'annonce nouvellement créée
-				return $this->redirectToRoute('oc_platform_view', array('id' => $advert->getId()));
-			}
+			// On redirige vers la page de visualisation de l'annonce nouvellement créée
+			return $this->redirectToRoute('oc_platform_view', array('id' => $advert->getId()));
 		}
 
 		return $this->render('OCPlatformBundle:Advert:edit.html.twig', array(
@@ -160,7 +145,7 @@ class AdvertController extends Controller
 		));
 	}
 
-	public function deleteAction($id)
+	public function deleteAction(Request $request, $id)
 	{
     $em = $this->getDoctrine()->getManager();
     // On récupère l'annonce $id
@@ -168,16 +153,22 @@ class AdvertController extends Controller
     if (null === $advert) {
 			throw new NotFoundHttpException("L'annonce d'id ".$id." n'existe pas.");
     }
-    // On boucle sur les catégories de l'annonce pour les supprimer
-    foreach ($advert->getCategories() as $category) {
-			$advert->removeCategory($category);
-    }
-    // Pour persister le changement dans la relation, il faut persister l'entité propriétaire
-    // Ici, Advert est le propriétaire, donc inutile de la persister car on l'a récupérée depuis Doctrine
-    // On déclenche la modification
-    $em->flush();
 
-		return $this->render('OCPlatformBundle:Advert:delete.html.twig');
+		$form = $this->createFormBuilder()->getForm();
+
+		if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
+			$em->remove($advert);
+			$em->flush();
+
+      $this->addFlash('notice', "L'annonce a bien été supprimée.");
+
+      return $this->redirectToRoute('oc_platform_home');			
+		}
+
+		return $this->render('OCPlatformBundle:Advert:delete.html.twig', array(
+			'advert' => $advert,
+			'form'   => $form->createView(),
+		));
 	}
 
 	public function menuAction($limit)

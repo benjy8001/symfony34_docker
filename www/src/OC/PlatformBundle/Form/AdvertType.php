@@ -58,7 +58,9 @@ class AdvertType extends AbstractType
 				}
 			}
 		);
-	}/**
+	}
+
+	/**
 	 * {@inheritdoc}
 	 */
 	public function configureOptions(OptionsResolver $resolver)

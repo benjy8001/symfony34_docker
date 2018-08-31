@@ -103,6 +103,12 @@ class AdvertController extends Controller
     $form   = $this->createForm(AdvertType::class, $advert);
 
     if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
+			/*
+			$antispam = $this->container->get('oc_platform.antispam');
+			if ($antispam->isSpam($text)) {
+				throw new \Exception('Votre message a été détecté comme spam !');
+			}
+			*/   	
 			$em = $this->getDoctrine()->getManager();
 			$em->persist($advert);
 			$em->flush();

@@ -26,7 +26,7 @@ class Application
     * @ORM\ManyToOne(targetEntity="OC\PlatformBundle\Entity\Advert", inversedBy="applications")
     * @ORM\JoinColumn(nullable=false)
     */
-    private $advert;  
+    private $advert;
 
     /**
      * @var string
@@ -55,6 +55,13 @@ class Application
      * @ORM\Column(name="date", type="datetime")
      */
     private $date;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="ip", type="string", length=255)
+     */
+    private $ip;
 
     public function __construct()
     {
@@ -205,5 +212,29 @@ class Application
     public function getEmail()
     {
         return $this->email;
+    }
+
+    /**
+     * Set ip.
+     *
+     * @param string $ip
+     *
+     * @return Application
+     */
+    public function setIp($ip)
+    {
+        $this->ip = $ip;
+
+        return $this;
+    }
+
+    /**
+     * Get ip.
+     *
+     * @return string
+     */
+    public function getIp()
+    {
+        return $this->ip;
     }
 }

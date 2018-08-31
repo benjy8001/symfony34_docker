@@ -33,7 +33,7 @@ class AdvertRepository extends EntityRepository
       ->getQuery()
       ->getResult()
       ;
-  }	
+  }
 
 	public function getAdverts($page, $nbPerPage)
 	{

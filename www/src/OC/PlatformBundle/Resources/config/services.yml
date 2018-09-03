@@ -36,6 +36,13 @@ services:
     tags:
       - { name: validator.constraint_validator, alias: oc_platform_antiflood }
 
+  oc_platform.twig.antispam_extension:
+    class: OC\PlatformBundle\Twig\AntispamExtension
+    arguments:
+      - "@oc_platform.antispam"
+    tags:
+      -  { name: twig.extension }
+
   oc_platform.form.ckeditor:
     class: OC\PlatformBundle\Form\CkeditorType
     tags:

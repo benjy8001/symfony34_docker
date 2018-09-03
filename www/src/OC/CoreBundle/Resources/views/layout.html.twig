@@ -39,6 +39,16 @@
         <h4>Les derniéres annonces</h4>
         {{ render(controller("OCPlatformBundle:Advert:menu", {'limit': 3})) }}
 
+
+        <h3>Utilisateur</h3>
+        {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+          Connecté en tant que {{ app.user.username }}
+          <br>
+          <a href="{{ path('fos_user_security_logout') }}">Déconnexion</a>
+        {% else %}
+          <a href="{{ path('fos_user_security_login') }}">Connexion</a>
+        {% endif %}
+
         <h3>Divers</h3>
         <ul class="nav nav-pills nav-stacked">
           <li><a href="{{ path('oc_core_contact') }}">Contact</a></li>

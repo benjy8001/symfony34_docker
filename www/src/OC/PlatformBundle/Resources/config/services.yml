@@ -35,3 +35,8 @@ services:
     arguments: ["@request_stack", "@doctrine.orm.entity_manager"]
     tags:
       - { name: validator.constraint_validator, alias: oc_platform_antiflood }
+
+  oc_platform.form.ckeditor:
+    class: OC\PlatformBundle\Form\CkeditorType
+    tags:
+      - { name: form.type, alias: ckeditor }

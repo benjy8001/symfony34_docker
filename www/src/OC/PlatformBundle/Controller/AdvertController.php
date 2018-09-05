@@ -21,6 +21,9 @@ use OC\PlatformBundle\Entity\AdvertSkill;
 use OC\PlatformBundle\Form\AdvertType;
 use OC\PlatformBundle\Form\AdvertEditType;
 
+use OC\PlatformBundle\Event\PlatformEvents;
+use OC\PlatformBundle\Event\MessagePostEvent;
+
 class AdvertController extends Controller
 {
 	const NB_PER_PAGE = 3;
@@ -101,18 +104,21 @@ class AdvertController extends Controller
 	 */
 	public function addAction(Request $request)
 	{
-    $advert = new Advert();
+		$advert = new Advert();
 
-    // On crée le FormBuilder grâce au service form factory
-    $form   = $this->createForm(AdvertType::class, $advert);
+		// On crée le FormBuilder grâce au service form factory
+		$form   = $this->createForm(AdvertType::class, $advert);
 
-    if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
-			/*
-			$antispam = $this->container->get('oc_platform.antispam');
-			if ($antispam->isSpam($text)) {
-				throw new \Exception('Votre message a été détecté comme spam !');
-			}
-			*/   	
+		if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
+			// On crée l'évènement avec ses 2 arguments
+			$event = new MessagePostEvent($advert->getContent(), $advert->getUser());
+
+			// On déclenche l'évènement
+			$this->get('event_dispatcher')->dispatch(PlatformEvents::POST_MESSAGE, $event);
+
+			// On récupère ce qui a été modifié par le ou les listeners, ici le message
+			$advert->setContent($event->getMessage());
+
 			$em = $this->getDoctrine()->getManager();
 			$em->persist($advert);
 			$em->flush();

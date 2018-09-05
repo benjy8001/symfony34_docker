@@ -1,0 +1,9 @@
+oc:
+  platform:
+    advert:
+        edit:
+            title:         Édition d'une annonce
+            submit_button: Valider
+        show:
+            edit_button:   Éditer l'annonce
+            create_button: Créer une nouvelle annonce

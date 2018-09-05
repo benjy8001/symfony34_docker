@@ -15,6 +15,8 @@ cd /mnt/apps/symfony/www
 
 chmod 777 var/ -R
 
+chown www-data:www-data web/uploads/ -R
+
 # composer install
 # npm install
 
@@ -40,5 +42,8 @@ php bin/console doctrine:schema:update --force
 
 #Seed database
 php bin/console doctrine:fixtures:load --no-interaction
+
+php bin/console fos:user:create testuser test@example.com p@ssword
+php bin/console fos:user:promote testuser ROLE_ADMIN
 
 exec "$@"

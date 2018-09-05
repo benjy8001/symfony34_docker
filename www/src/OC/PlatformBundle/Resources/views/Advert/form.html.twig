@@ -62,11 +62,13 @@
   </div>
   <a href="#" id="add_category" class="btn btn-default">Ajouter une catégorie</a>
 
-  <div class="form-group">
-    <div class="col-sm-offset-2 col-sm-10">
-      {{ form_widget(form.published) }} {{ form_label(form.published, "Publier") }}
+  {% if form.published is defined %}
+    <div class="form-group">
+      <div class="col-sm-offset-2 col-sm-10">
+        {{ form_widget(form.published) }} {{ form_label(form.published, "Publier") }}
+      </div>
     </div>
-  </div>
+  {% endif %}
 
   <div class="form-group">
     <div class="col-sm-offset-2 col-sm-10">

@@ -59,25 +59,15 @@ class AdvertController extends Controller
 
 	// La route fait appel à OCPlatformBundle:Advert:view, on doit donc définir la méthode viewAction.
 	// On donne à cette méthode l'argument $id, pour correspondre au paramètre {id} de la route
-	public function viewAction($id)
+	public function viewAction(Advert $advert)
 	{
-		// On récupère l'EntityManager
 		$em = $this->getDoctrine()->getManager();
 
-		// On récupère l'entité correspondante à l'id $id
-		$advert = $em->getRepository('OCPlatformBundle:Advert')->find($id);
-
-		// $advert est donc une instance de OC\PlatformBundle\Entity\Advert
-		// ou null si l'id $id  n'existe pas, d'où ce if :
-		if (null === $advert) {
-		  throw new NotFoundHttpException("L'annonce d'id ".$id." n'existe pas.");
-		}
-
-			// On récupère la liste des candidatures de cette annonce
-			$listApplications = $em
-				->getRepository('OCPlatformBundle:Application')
-				->findBy(array('advert' => $advert))
-			;
+		// On récupère la liste des candidatures de cette annonce
+		$listApplications = $em
+			->getRepository('OCPlatformBundle:Application')
+			->findBy(array('advert' => $advert))
+		;
 
 		// On récupère maintenant la liste des AdvertSkill
 		$listAdvertSkills = $em
@@ -110,14 +100,17 @@ class AdvertController extends Controller
 		$form   = $this->createForm(AdvertType::class, $advert);
 
 		if ($request->isMethod('POST') && $form->handleRequest($request)->isValid()) {
+			$user = $this->getUser();
+
 			// On crée l'évènement avec ses 2 arguments
-			$event = new MessagePostEvent($advert->getContent(), $advert->getUser());
+			$event = new MessagePostEvent($advert->getContent(), $user);
 
 			// On déclenche l'évènement
 			$this->get('event_dispatcher')->dispatch(PlatformEvents::POST_MESSAGE, $event);
 
 			// On récupère ce qui a été modifié par le ou les listeners, ici le message
 			$advert->setContent($event->getMessage());
+			$advert->setUser($user);
 
 			$em = $this->getDoctrine()->getManager();
 			$em->persist($advert);
@@ -134,15 +127,9 @@ class AdvertController extends Controller
 		));
 	}
 
-	public function editAction($id, Request $request)
+	public function editAction(Advert $advert, Request $request)
 	{
 		$em = $this->getDoctrine()->getManager();
-		// On récupère l'entité correspondante à l'id $id
-		$advert = $em->getRepository('OCPlatformBundle:Advert')->find($id);
-
-		if (null === $advert) {
-		  throw new NotFoundHttpException("L'annonce d'id ".$id." n'existe pas.");
-		}
 
 		$form = $this->createForm(AdvertEditType::class, $advert);
 
@@ -161,14 +148,9 @@ class AdvertController extends Controller
 		));
 	}
 
-	public function deleteAction(Request $request, $id)
+	public function deleteAction(Advert $advert, Request $request)
 	{
 		$em = $this->getDoctrine()->getManager();
-		// On récupère l'annonce $id
-		$advert = $em->getRepository('OCPlatformBundle:Advert')->find($id);
-		if (null === $advert) {
-				throw new NotFoundHttpException("L'annonce d'id ".$id." n'existe pas.");
-		}
 
 		$form = $this->createFormBuilder()->getForm();
 

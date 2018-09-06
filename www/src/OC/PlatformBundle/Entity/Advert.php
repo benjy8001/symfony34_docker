@@ -43,6 +43,12 @@ class Advert
 	private $categories;
 
 	/**
+	 * @ORM\ManyToOne(targetEntity="OC\UserBundle\Entity\User")
+	 * @ORM\JoinTable(name="oc_user")
+	 */
+	private $user;
+
+	/**
 	 * @ORM\OneToMany(targetEntity="OC\PlatformBundle\Entity\Application", mappedBy="advert")
 	 */
 	private $applications;
@@ -485,4 +491,28 @@ class Advert
 			;
 		}
 	}
+
+    /**
+     * Set user.
+     *
+     * @param \OC\UserBundle\Entity\User|null $user
+     *
+     * @return Advert
+     */
+    public function setUser(\OC\UserBundle\Entity\User $user = null)
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+    /**
+     * Get user.
+     *
+     * @return \OC\UserBundle\Entity\User|null
+     */
+    public function getUser()
+    {
+        return $this->user;
+    }
 }

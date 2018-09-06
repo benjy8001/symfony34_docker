@@ -1,0 +1,6 @@
+html {
+    /* juste un fichier de test */
+    background-image: url('../img/bg.jpg');
+    background-position: right bottom, left top;
+  	background-repeat: no-repeat;
+}

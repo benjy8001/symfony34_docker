@@ -31,3 +31,11 @@ Some fixes
 Instead of :
 
 `return $this->render('OCPlatformBundle:Default:index.html.twig');`
+
+
+TODO :
+Use of Doctrine migration.
+Add spinner overlay until loading end.
+Add unit tests.
+Add webpack for testing.
+Add varnish docker image.

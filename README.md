@@ -34,7 +34,6 @@ Instead of :
 
 
 TODO :
-Use of Doctrine migration.
 Add spinner overlay until loading end.
 Add unit tests.
 Add webpack for testing.

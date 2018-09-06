@@ -34,10 +34,14 @@ done
 # php bin/console doctrine:schema:update --dump-sql
 
 #Execute queries diff
-php bin/console doctrine:schema:update --force
+# php bin/console doctrine:schema:update --force
+php bin/console doctrine:migrations:migrate --no-interaction
 
 #Generate getter/setter entity
 # php bin/console doctrine:generate:entities OCPlatformBundle:Advert
+
+#Generate migration file
+# php bin/console doctrine:migrations:diff
 
 #Seed database
 php bin/console doctrine:fixtures:load --no-interaction

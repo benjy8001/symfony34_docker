@@ -8,13 +8,20 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20180906152030 extends AbstractMigration
+final class Version20180910123413 extends AbstractMigration
 {
     public function up(Schema $schema) : void
     {
         // this up() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'postgresql', 'Migration can only be executed safely on \'postgresql\'.');
 
+        $this->addSql('CREATE SEQUENCE oc_skill_id_seq INCREMENT BY 1 MINVALUE 1 START 1');
+        $this->addSql('CREATE SEQUENCE oc_advert_skill_id_seq INCREMENT BY 1 MINVALUE 1 START 1');
+        $this->addSql('CREATE SEQUENCE oc_category_id_seq INCREMENT BY 1 MINVALUE 1 START 1');
+        $this->addSql('CREATE SEQUENCE oc_advert_id_seq INCREMENT BY 1 MINVALUE 1 START 1');
+        $this->addSql('CREATE SEQUENCE oc_image_id_seq INCREMENT BY 1 MINVALUE 1 START 1');
+        $this->addSql('CREATE SEQUENCE oc_application_id_seq INCREMENT BY 1 MINVALUE 1 START 1');
+        $this->addSql('CREATE SEQUENCE oc_user_id_seq INCREMENT BY 1 MINVALUE 1 START 1');
         $this->addSql('CREATE TABLE oc_skill (id INT NOT NULL, name VARCHAR(255) NOT NULL, PRIMARY KEY(id))');
         $this->addSql('CREATE TABLE oc_advert_skill (id INT NOT NULL, advert_id INT NOT NULL, skill_id INT NOT NULL, level VARCHAR(255) NOT NULL, PRIMARY KEY(id))');
         $this->addSql('CREATE INDEX IDX_32EFF25BD07ECCB6 ON oc_advert_skill (advert_id)');
@@ -58,6 +65,13 @@ final class Version20180906152030 extends AbstractMigration
         $this->addSql('ALTER TABLE oc_application DROP CONSTRAINT FK_39F85DD8D07ECCB6');
         $this->addSql('ALTER TABLE oc_advert DROP CONSTRAINT FK_B1931753DA5256D');
         $this->addSql('ALTER TABLE oc_advert DROP CONSTRAINT FK_B193175A76ED395');
+        $this->addSql('DROP SEQUENCE oc_skill_id_seq CASCADE');
+        $this->addSql('DROP SEQUENCE oc_advert_skill_id_seq CASCADE');
+        $this->addSql('DROP SEQUENCE oc_category_id_seq CASCADE');
+        $this->addSql('DROP SEQUENCE oc_advert_id_seq CASCADE');
+        $this->addSql('DROP SEQUENCE oc_image_id_seq CASCADE');
+        $this->addSql('DROP SEQUENCE oc_application_id_seq CASCADE');
+        $this->addSql('DROP SEQUENCE oc_user_id_seq CASCADE');
         $this->addSql('DROP TABLE oc_skill');
         $this->addSql('DROP TABLE oc_advert_skill');
         $this->addSql('DROP TABLE oc_category');

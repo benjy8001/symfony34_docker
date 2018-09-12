@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>{% block title %}OC Plateforme{% endblock %}</title>
+
+  {% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('build/js/occore_main.css') }}" type="text/css" />
+    <link rel="stylesheet" href="{{ asset('build/css/ocplatform_main.css') }}" type="text/css" />
+  {% endblock %}
+</head>
+
+<body>
+  <div class="container">
+    <div id="header" class="jumbotron">
+      <h1>Ma plateforme d'annonces</h1>
+      <p>
+        Ce projet est propulsé par Symfony,
+        et construit grâce au MOOC OpenClassrooms et SensioLabs.
+      </p>
+      <p>
+        <a class="btn btn-primary btn-lg" href="https://openclassrooms.com/courses/developpez-votre-site-web-avec-le-framework-symfony2">
+          Participer au MOOC »
+        </a>
+      </p>
+    </div>
+    <div class="row">
+      <div id="menu" class="col-md-3">
+        <h3>Les annonces</h3>
+        <ul class="nav nav-pills nav-stacked">
+          <li><a href="{{ path('oc_platform_home') }}">Accueil</a></li>
+          {% if is_granted('ROLE_AUTEUR') %}
+            <li><a href="{{ path('oc_platform_add') }}">Ajouter une annonce</a></li>
+          {% endif %}
+        </ul>
+
+        <h4>Les derniéres annonces</h4>
+        {{ render(controller("OCPlatformBundle:Advert:menu", {'limit': 3})) }}
+
+
+        <h3>Utilisateur</h3>
+        {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+          Connecté en tant que {{ app.user.username }}
+          <br>
+          <a href="{{ path('fos_user_security_logout') }}">Déconnexion</a>
+        {% else %}
+          <a href="{{ path('fos_user_security_login') }}">Connexion</a>
+        {% endif %}
+
+        <h3>Divers</h3>
+        <ul class="nav nav-pills nav-stacked">
+          <li><a href="{{ path('oc_core_contact') }}">Contact</a></li>
+        </ul>
+      </div>
+      <div id="content" class="col-md-9">
+
+        {% for message in app.flashes('notice') %}
+          <div class="alert alert-warning" role="alert">Message flash : {{ message }}</div>
+        {% endfor %}
+
+        {% block body %}
+        {% endblock %}
+      </div>
+    </div>
+
+    <hr>
+
+    <footer>
+      <p>The sky's the limit © {{ 'now'|date('Y') }} and beyond.</p>
+    </footer>
+  </div>
+
+  {% block javascripts %}
+    <script src="{{ asset('build/manifest.js') }}"></script>
+    <script src="{{ asset('build/vendor.js') }}"></script>
+    <script src="{{ asset('build/js/occore_main.js') }}"></script>
+  {% endblock %}
+
+</body>
+</html>

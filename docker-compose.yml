@@ -1,32 +1,72 @@
-version: '3'
+version: '3.4'
+
 services:
   application:
-    privileged: true
+    container_name: application
+    image: symfony34/php
     build:
-      context: .
-      dockerfile: Dockerfile
-    ports:
-      - "80:80"
-    links:
+      context: ./webapp
+      cache_from:
+        - symfony34/php
+        - symfony34/varnish
+    depends_on:
       - database
-    container_name: application
     volumes:
-      - .:/mnt/apps/symfony
-      - /lib/modules:/lib/modules
-    container_name: application
+      - ./webapp:/mnt/apps/symfony:rw,cached
+    ports:
+      - "3000:80"
+
   database:
-    build:
-      context: .
-      dockerfile: Dockerfile-postgres
     container_name: database
+    image: postgres:9.6-alpine
     environment:
       - POSTGRES_DB=symfony_db
       - POSTGRES_USER=symfony_user
       - POSTGRES_PASSWORD=symfony_password
+    volumes:
+      - db-data:/var/lib/postgresql/data:rw
+      # You may use a bind-mounted host directory instead, so that it is harder to accidentally remove the volume and lose all your data!
+      # - ./docker/db/data:/var/lib/postgresql/data:rw
+    ports:
+      - "5432:5432"
+
+  cache-proxy:
+    container_name: cache-proxy
+    image: symfony34/varnish
+    build:
+      context: ./varnish
+      cache_from:
+        - symfony34/php
+        - symfony34/varnish
+    depends_on:
+      - application
+    volumes:
+      - ./varnish/conf:/usr/local/etc/varnish:ro
+    tmpfs:
+      - /usr/local/var/varnish:exec
+    ports:
+      - "8081:80"
+
+  h2-proxy:
+    # Don't use this proxy in prod
+    container_name: h2-proxy
+    image: symfony34/h2-proxy
+    build:
+      context: ./h2-proxy
+    depends_on:
+      - application
+      - cache-proxy
+    ports:
+      - "443:443"
+      - "80:80"
+
   adminer:
     image: adminer
     restart: always
     ports:
       - "8080:8080"
-    links:
+    depends_on:
       - database
+
+volumes:
+  db-data: {}

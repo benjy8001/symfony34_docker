@@ -1,0 +1,106 @@
+#!/bin/bash
+
+ROOT_PATH=/mnt/apps/symfony
+APACHE_LOG_PATH=/var/log/symfony
+
+# Check if we have colors enabled
+tput=$(which tput)
+if [ -n "$tput" ]; then
+    ncolors=$($tput colors)
+    if [ -n "$ncolors" ] && [ "$ncolors" -ge 8 ]; then
+        red="$(tput setaf 1)"
+        green="$(tput setaf 2)"
+        white="$(tput setaf 7)"
+        bluecyanbold="$(tput bold ; tput setaf 6)"
+        whitebg="$(tput setab 7)"
+        greenbg="$(tput setab 2)"
+        redbg="$(tput setab 1)"
+        reset="$(tput sgr0)"
+    else
+        red=""
+        green=""
+        white=""
+        bluecyanbold=""
+        whitebg=""
+        greenbg=""
+        redbg=""
+        reset=""
+    fi
+fi
+
+echo "1/ $1"
+
+case "$1" in
+    configure)
+        echo "${greenbg}${white}Post install configure...${reset}"
+
+        echo "${greenbg}${white}Checking composer ...${reset}"
+        if [ ! -e /usr/local/bin/composer ];then
+            echo "${greenbg}${white}Installation of composer ...${reset}"
+            #check dynamically composer hash signature
+            wget https://composer.github.io/installer.sig -O - -q | tr -d '\n' > installer.sig
+            php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+            php -r "if (hash_file('SHA384', 'composer-setup.php') === file_get_contents('installer.sig')) { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"
+            php composer-setup.php --install-dir=/usr/local/bin --filename=composer
+            php -r "unlink('composer-setup.php'); unlink('installer.sig');"
+        fi
+
+        echo "${greenbg}${white}Starting postgresql ...${reset}"
+        /etc/init.d/postgresql start
+        #install mode
+        if [ -z "$2" ]; then
+            echo "${greenbg}${white}First install : Create DB User ...${reset}"
+            psql --username "postgres" -h 127.0.0.1 <<-EOSQL
+            \set ON_ERROR_STOP TRUE
+            CREATE USER symfony_user WITH PASSWORD 'symfony_password';
+            CREATE DATABASE symfony_db;
+            GRANT ALL PRIVILEGES ON DATABASE symfony_db TO symfony_user;
+EOSQL
+            psql_exit_status=$?
+
+            if [ $psql_exit_status != 0 ]; then
+                echo "${redbg}${white}psql failed while trying to run this sql script${reset}" 1>&2
+                exit $psql_exit_status
+            fi
+        fi
+
+        echo "${greenbg}${white}Checking apache modes ...${reset}"
+        a2dismod mpm_event
+        a2enmod mpm_prefork
+        a2enmod rewrite
+        a2enmod php7.0
+        a2enmod ldap
+
+        echo "${greenbg}${white}Disable default VHost ...${reset}"
+        a2dissite 000-default.conf
+
+        echo "${greenbg}${white}Restart apache ...${reset}"
+        /etc/init.d/apache2 restart
+
+        echo "${greenbg}${white}Modify File Permissions in '${ROOT_PATH}' ...${reset}"
+        chmod 755 -R "${ROOT_PATH}"
+        chown -R www-data. "${ROOT_PATH}"
+
+        echo "${greenbg}${white}Move to '${ROOT_PATH}' ...${reset}"
+        cd "${ROOT_PATH}"
+
+        echo "${greenbg}${white}Install composer dependencies ...${reset}"
+        composer install --no-dev
+        ;;
+    abort-install)
+        echo "${whitebg}${red}Post install abort-install not implemented${reset}"
+        ;;
+    abort-upgrade)
+        echo "${whitebg}${red}Post install abort-upgrade not implemented${reset}"
+        ;;
+    abort-remove)
+        echo "${whitebg}${red}Post install abort-remove not implemented${reset}"
+        ;;
+    *)
+        echo "${redbg}${white}Post install called with unknown argument '$1'${reset}" >&2
+        exit 1
+        ;;
+esac
+
+exit 0
+

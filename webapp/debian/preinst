@@ -1,0 +1,42 @@
+#!/bin/bash
+
+# Check if we have colors enabled
+tput=$(which tput)
+if [ -n "$tput" ]; then
+    ncolors=$($tput colors)
+    if [ -n "$ncolors" ] && [ "$ncolors" -ge 8 ]; then
+        red="$(tput setaf 1)"
+        green="$(tput setaf 2)"
+        white="$(tput setaf 7)"
+        whitebg="$(tput setab 7)"
+        greenbg="$(tput setab 2)"
+        redbg="$(tput setab 1)"
+        reset="$(tput sgr0)"
+    else
+        red=""
+        green=""
+        white=""
+        whitebg=""
+        greenbg=""
+        redbg=""
+        reset=""
+    fi
+fi
+
+case "$1" in
+    install)
+        echo "${whitebg}${red}Pre install install not implemented${reset}"
+        ;;
+    upgrade)
+        echo "${whitebg}${red}Pre install upgrade not implemented${reset}"
+        ;;
+    abort-upgrade)
+        echo "${whitebg}${red}Pre install abort-upgrade not implemented${reset}"
+        ;;
+    *)
+        echo "${whitebg}${red}pre install called with unknown argument '$1'${reset}" >&2
+        exit 1
+        ;;
+esac
+
+exit 0

@@ -1,0 +1,14 @@
+Source: symfony
+Section: web
+Maintainer: Benjy80 <benjy80@gmail.com>
+Build-Depends: debhelper (>= 8.0.0)
+Standards-Version: 3.0
+Homepage: http://www.benjamin.mabille.fr
+
+
+Package: symfony
+Priority: extra
+Architecture: amd64
+Depends: apache2, php7.0, php7.0-pdo, php7.0-mbstring, php7.0-ldap, php7.0-tokenizer, php7.0-xml, php7.0-cli, php7.0-pgsql, libapache2-mod-php7.0, postgresql-9.6, postgresql-common, postgresql-client, libpq-dev, zlib1g-dev, libnss3, libgconf-2-4, libx11-6, libfontconfig
+Description: symfony version 3.4
+

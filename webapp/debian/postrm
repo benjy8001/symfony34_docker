@@ -1,0 +1,57 @@
+#!/bin/bash
+
+APACHE_LOG_PATH=/var/ugloo/log/umanager
+
+# Check if we have colors enabled
+tput=$(which tput)
+if [ -n "$tput" ]; then
+    ncolors=$($tput colors)
+    if [ -n "$ncolors" ] && [ "$ncolors" -ge 8 ]; then
+        red="$(tput setaf 1)"
+        green="$(tput setaf 2)"
+        white="$(tput setaf 7)"
+        whitebg="$(tput setab 7)"
+        greenbg="$(tput setab 2)"
+        redbg="$(tput setab 1)"
+        reset="$(tput sgr0)"
+    else
+        red=""
+        green=""
+        white=""
+        whitebg=""
+        greenbg=""
+        redbg=""
+        reset=""
+    fi
+fi
+
+case "$1" in
+    remove)
+        echo "${whitebg}${red}Post rm remove not implemented${reset}"
+        echo "${redbg}${white}For a fresh install, or for upgrade from 3.2.3 to 3.2.5, please add --purge option${reset}"
+        ;;
+    upgrade)
+        echo "${whitebg}${red}Post rm upgrade not implemented${reset}"
+        ;;
+    purge)
+        echo "${greenbg}${white}Post rm purge...${reset}"
+        if [ -e /etc/apache2/sites-available/symfony.conf ]; then
+            rm /etc/apache2/sites-available/symfony.conf
+        fi
+        if [ -e ${APACHE_LOG_PATH} ]; then
+            rm -Rf ${APACHE_LOG_PATH}
+        fi
+        ;;
+    abort-install)
+        echo "${whitebg}${red}Post rm abort-install not implemented${reset}"
+        ;;
+    abort-upgrade)
+        echo "${whitebg}${red}Post rm abort-upgrade not implemented${reset}"
+        ;;
+    *)
+        echo "${whitebg}${red}Post rm called with unknown argument '$1'${reset}" >&2
+        exit 1
+        ;;
+esac
+
+exit 0

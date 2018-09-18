@@ -10,3 +10,4 @@ webapp/www/web/uploads/img
 webapp/www/vendor
 webapp/www/.env
 webapp/www/node_modules
+.idea

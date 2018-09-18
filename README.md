@@ -3,6 +3,25 @@ Exchange plateform with Symfony 3.4
 
 Based on Openclassroom course.
 
+Setup
+-----
+
+Edit `webapp/www/app/config/parameters.yml`
+
+```
+parameters:
+    database_host: database
+    database_port: 5432
+    database_name: symfony_db
+    database_user: symfony_user
+    database_password: symfony_password
+    mailer_transport: smtp
+    mailer_host: 127.0.0.1
+    mailer_user: lorem@ipsum.fr
+    mailer_password: null
+    secret: ThisTokenIsNotSoSecretChangeIt
+
+```
 
 Build
 -----
